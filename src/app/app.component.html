@@ -1,0 +1,97 @@
+
+<header class="header">
+  <div class="menu">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <div class="button-container">
+    <button class="cta-button" (click)="openAddSaleModal()">Add Sale</button>
+  </div>
+</header>
+
+<app-add-sale
+  [isVisible]="isAddSaleModalVisible"
+  [stores]="idd"
+  (closeModal)="closeAddSaleModal()"
+></app-add-sale>
+
+<div class="container">
+  <h2>Fetch Store Data</h2>
+
+  <form (ngSubmit)="onSubmit()" #fetchDataForm="ngForm">
+    <div class="form-group">
+      <label for="storeId">Store ID</label>
+      
+      <select
+        id="storeId"
+        class="form-control"
+        [(ngModel)]="id"
+        name="id"
+        required
+      >
+        
+        <option *ngFor="let storeId of idd" [value]="storeId.id">
+          {{ storeId.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input
+        type="date"
+        id="date"
+        class="form-control"
+        [(ngModel)]="date"
+        name="date"
+        [max]="maxDate"
+        required
+        #dateInput="ngModel"
+      />
+    </div>
+    <div *ngIf="dateInput.invalid && dateInput.touched" class="alert alert-danger">
+      Date is required.
+    </div>
+
+    <button type="submit" class="btn btn-primary" >
+      Fetch Data
+    </button>
+  </form>
+
+ 
+  <div *ngIf="data && data.length > 0">
+    <h3>Sales Data</h3>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Total Sale</th>
+          <th>MRP</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of data">
+          <td>{{ item.pname }}</td>
+          <td>{{ item.totalSales }}</td>
+          <td>{{ item.mrp }}</td>
+          <td>&#8377; {{ item.amount}} </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Display error messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Display no data message -->
+  <div *ngIf="noDataMessage" class="alert alert-warning">
+    {{ noDataMessage }}
+  </div>
+</div>
